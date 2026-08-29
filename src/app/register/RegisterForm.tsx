@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { registerStudent, type ActionState } from "@/lib/auth-actions";
+import { PhotoCapture } from "@/components/PhotoCapture";
 
 const initial: ActionState = {};
 const YEARS = Array.from({ length: new Date().getFullYear() - 2004 }, (_, i) => 2005 + i).reverse();
 
 export function RegisterForm({ leaders }: { leaders: { id: string; full_name: string }[] }) {
   const [state, action, pending] = useActionState(registerStudent, initial);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   return (
     <main className="page page-sm animate-page">
@@ -47,25 +47,7 @@ export function RegisterForm({ leaders }: { leaders: { id: string; full_name: st
           ) : null}
         </label>
 
-        <label className="block">
-          <span className="text-sm text-muted">Photo / selfie</span>
-          <input
-            name="photo"
-            type="file"
-            accept="image/*"
-            capture="user"
-            required
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              setPhotoPreview(f ? URL.createObjectURL(f) : null);
-            }}
-            className="mt-1 w-full rounded-xl border border-border bg-surface p-2 text-sm"
-          />
-          {photoPreview ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={photoPreview} alt="" className="mt-2 h-24 w-24 rounded-xl object-cover" />
-          ) : null}
-        </label>
+        <PhotoCapture />
 
         <div className="grid grid-cols-2 gap-3">
           <Field label="Choose a 4-digit PIN" name="pin" type="password" inputMode="numeric" pattern="\d{4}" maxLength={4} required />
